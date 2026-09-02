@@ -131,11 +131,17 @@ Permite marcar a aula como:
 - Apenas aulas REALIZADAS são contabilizadas.
 - Aulas CANCELADAS e ADIADAS não geram receita.
 
-### Pagamento Mensal
+###Pagamento mensal
 
 - O aluno possui um valor mensal configurado.
-- Apenas aulas REALIZADAS são consideradas para cálculo efetivo de receita.
-- Aulas CANCELADAS e ADIADAS não entram no cálculo enquanto não forem realizadas.
+- Inicialmente, não haverá integração ou sistema de pagamento para validar o recebimento.
+- O professor será responsável por confirmar a situação de cada aula.
+- O sistema considerará uma aula REALIZADA como paga/recebida, para fins de controle financeiro.
+- Aulas CANCELADAS serão contabilizadas como valor perdido.
+- Aulas ADIADAS não serão consideradas como receita, valor perdido ou valor a receber enquanto não forem realizadas.
+- Quando uma aula ADIADA for posteriormente realizada, ela passará a ser considerada como receita efetiva.
+- Apenas aulas com status REALIZADA serão consideradas no cálculo da receita efetiva.
+- Aulas CANCELADAS e ADIADAS não entram no cálculo da receita efetiva.
 
 ## RN-010 - Indicadores
 
@@ -153,7 +159,7 @@ O sistema deve apresentar:
 - O usuário pode ocultar valores financeiros.
 - Todos os indicadores respeitam o período selecionado.
 
-## RN-012 - Configurações
+## RN-011 - Configurações
 
 O professor pode configurar:
 
