@@ -94,6 +94,74 @@ A API será disponibilizada através de endpoints REST para gerenciamento de:
 <br>Pagamentos
 <br>Controle financeiro
 
+```mermaid
+---
+config:
+  layout: elk
+  themeVariables:
+    lineColor: '#ffffff'
+---
+erDiagram
+    PROFESSOR ||--o{ ALUNO : teaches
+    PROFESSOR ||--o{ AULA : conducts
+    RESPONSAVEL ||--o{ ALUNO : supervises
+    ALUNO ||--o{ AULA : attends
+
+    PROFESSOR {
+        uuid id PK
+        string nome
+        string email UK
+        string senha_hash
+        int intervalo_minimo
+    }
+
+    RESPONSAVEL {
+        uuid id PK
+        uuid professor
+        string nome
+        string telefone
+    }
+
+    ALUNO {
+        uuid id PK
+        uuid professor_id FK
+        uuid responsavel_id FK
+        string nome
+        string telefone
+        string endereco
+        string forma_pagamento
+        decimal valor_mensal
+        string dia_semana_padrao
+        time horario_padrao
+        int duracao_padrao_min
+        decimal valor_padrao
+    }
+
+    AULA {
+        uuid id PK
+        uuid professor_id FK
+        uuid aluno_id FK
+        uuid aula_original_id
+        date data
+        time horario_inicio
+        time horario_fim
+        int duracao_minutos
+        decimal valor
+        string status
+        boolean pago
+        date date_pagamento
+    }
+
+    classDef professor stroke:#818cf8,stroke-width:3px
+    classDef responsavel stroke:#2dd4bf,stroke-width:3px
+    classDef aluno stroke:#a78bfa,stroke-width:3px
+    classDef aula stroke:#fb923c,stroke-width:3px
+
+    PROFESSOR:::professor
+    RESPONSAVEL:::responsavel
+    ALUNO:::aluno
+    AULA:::aula
+```
 ## Status
 
 Setup do projeto 
