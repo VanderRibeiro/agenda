@@ -1,4 +1,4 @@
-package com.brunoribeiro.Entities;
+package com.brunoribeiro.entities;
 
 import jakarta.persistence.*;
 
@@ -146,5 +146,6 @@ public class Aluno {
     public void setValorPadrao(BigDecimal valorPadrao) {
         this.valorPadrao = valorPadrao;
     }
+
 }
 

@@ -1,4 +1,4 @@
-package com.brunoribeiro.Entities;
+package com.brunoribeiro.entities;
 
 import jakarta.persistence.*;
 
