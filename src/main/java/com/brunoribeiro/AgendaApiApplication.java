@@ -1,4 +1,4 @@
-package com.brunoribeiro.agenda_api;
+package com.brunoribeiro;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,5 +1,6 @@
 package com.brunoribeiro.agenda_api;
 
+import com.brunoribeiro.AgendaApiApplication;
 import org.springframework.boot.SpringApplication;
 
 public class TestAgendaApiApplication {
