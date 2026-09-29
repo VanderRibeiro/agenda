@@ -16,14 +16,14 @@ import java.util.UUID;
 public class AulaService {
 
     @Autowired
-    public AulaRepository aulaRepository;
+    private AulaRepository aulaRepository;
 
     public List<Aula> findAll() {
         return aulaRepository.findAll();
     }
 
     public Aula findById(UUID id) {
-        return aulaRepository.findById(id).orElse(null);
+        return aulaRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aula não encontrada"));
     }
 
     public Aula update(UUID id, Aula obj) {
@@ -44,4 +44,7 @@ public class AulaService {
         aula.setData(obj.getData());
     }
 
+    public Aula create(Aula aula) {
+        return aulaRepository.save(aula);
+    }
 }

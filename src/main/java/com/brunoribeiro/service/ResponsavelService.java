@@ -15,19 +15,19 @@ import java.util.UUID;
 public class ResponsavelService {
 
     @Autowired
-    public ResponsavelRepository  responsavelRepository;
+    private ResponsavelRepository  responsavelRepository;
 
     public List<Responsavel> findAll() {
         return responsavelRepository.findAll();
     }
 
     public Responsavel findById(UUID id) {
-        return responsavelRepository.findById(id).orElse(null);
+        return responsavelRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Responsável não encontrado"));
     }
 
     public void deleteById(UUID id) {
         if(!responsavelRepository.existsById(id)) {
-            throw new RuntimeException("Responsável não encontrado");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Responsável não encontrado");
         }
         responsavelRepository.deleteById(id);
     }
@@ -41,5 +41,9 @@ public class ResponsavelService {
 
     public void updateResponsavel(Responsavel responsavel, Responsavel obj) {
         responsavel.setNome(obj.getNome());
+    }
+
+    public Responsavel create(Responsavel responsavel) {
+        return responsavelRepository.save(responsavel);
     }
 }

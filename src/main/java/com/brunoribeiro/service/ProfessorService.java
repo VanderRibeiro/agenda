@@ -14,14 +14,14 @@ import java.util.UUID;
 public class ProfessorService {
 
     @Autowired
-    public ProfessorRepository professorRepository;
+    private ProfessorRepository professorRepository;
 
     public List<Professor> findAll() {
         return professorRepository.findAll();
     }
 
     public Professor findById(UUID id) {
-        return professorRepository.findById(id).orElse(null);
+        return professorRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Professor não encontrado"));
     }
 
     public Professor update(UUID id, Professor obj) {
@@ -40,5 +40,9 @@ public class ProfessorService {
 
     public void updateProfessor(Professor professor, Professor obj) {
         professor.setNome(obj.getNome());
+    }
+
+    public Professor create(Professor professor) {
+        return professorRepository.save(professor);
     }
 }

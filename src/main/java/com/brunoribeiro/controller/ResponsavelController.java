@@ -1,5 +1,6 @@
 package com.brunoribeiro.controller;
 
+import com.brunoribeiro.entities.Aluno;
 import com.brunoribeiro.entities.Responsavel;
 import com.brunoribeiro.service.ResponsavelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,11 @@ import java.util.UUID;
 @RequestMapping("/responsaveis")
 public class ResponsavelController {
 
-    @Autowired
-    public ResponsavelService responsavelService;
+    private final ResponsavelService responsavelService;
+
+    public ResponsavelController(ResponsavelService responsavelService) {
+        this.responsavelService = responsavelService;
+    }
 
     @GetMapping
     public List<Responsavel> findAll(){
@@ -32,8 +36,13 @@ public class ResponsavelController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public Responsavel update(@PathVariable UUID id, @RequestBody Responsavel responsavel){
         return responsavelService.update(id,responsavel);
+    }
+
+    @PostMapping
+    public Responsavel create(@RequestBody Responsavel responsavel){
+        return responsavelService.create(responsavel);
     }
 }

@@ -22,7 +22,7 @@ public class AlunoService {
     }
 
     public Aluno findById(UUID id) {
-        return alunoRepository.findById(id).orElse(null);
+        return alunoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluno não encontrado"));
     }
 
     public Aluno update(UUID id, Aluno obj) {
@@ -41,5 +41,9 @@ public class AlunoService {
 
     public void updateAluno(Aluno aluno, Aluno obj){
         aluno.setNome(obj.getNome());
+    }
+
+    public Aluno create(Aluno aluno) {
+        return alunoRepository.save(aluno);
     }
 }

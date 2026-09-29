@@ -1,7 +1,9 @@
 package com.brunoribeiro.controller;
 
+import com.brunoribeiro.entities.Aluno;
 import com.brunoribeiro.entities.Aula;
 import com.brunoribeiro.service.AulaService;
+import com.brunoribeiro.service.ResponsavelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +15,11 @@ import java.util.UUID;
 @RequestMapping("/aulas")
 public class AulaController {
 
-    @Autowired
-    private AulaService aulaService;
+    private final AulaService aulaService;
+
+    public AulaController(AulaService aulaService) {
+        this.aulaService = aulaService;
+    }
 
     @GetMapping
     public List<Aula> findAll(){
@@ -32,8 +37,13 @@ public class AulaController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
-    public Aula update(@PathVariable UUID id, @RequestBody Aula Aula){
-        return aulaService.update(id,Aula);
+    @PutMapping("/{id}")
+    public Aula update(@PathVariable UUID id, @RequestBody Aula aula){
+        return aulaService.update(id,aula);
+    }
+
+    @PostMapping
+    public Aula create(@RequestBody Aula aula){
+        return aulaService.create(aula);
     }
 }
