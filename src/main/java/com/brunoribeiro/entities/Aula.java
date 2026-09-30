@@ -12,6 +12,7 @@ import java.util.UUID;
 public class Aula {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", columnDefinition = "uuid")
     private UUID id;
 

@@ -2,7 +2,7 @@ package com.brunoribeiro.service;
 
 import com.brunoribeiro.entities.Professor;
 import com.brunoribeiro.repositories.ProfessorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,15 +13,19 @@ import java.util.UUID;
 @Service
 public class ProfessorService {
 
-    @Autowired
-    private ProfessorRepository professorRepository;
+    private final ProfessorRepository professorRepository;
+
+    public ProfessorService(ProfessorRepository professorRepository) {
+        this.professorRepository = professorRepository;
+    }
 
     public List<Professor> findAll() {
         return professorRepository.findAll();
     }
 
     public Professor findById(UUID id) {
-        return professorRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Professor não encontrado"));
+        return professorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado, ID: " + id));
     }
 
     public Professor update(UUID id, Professor obj) {
@@ -31,15 +35,15 @@ public class ProfessorService {
         return professorRepository.save(entity);
     }
 
-    public void deleteById(UUID id){
-        if(!professorRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Professor não encontrado");
-        }
-        professorRepository.deleteById(id);
+    public void deleteById(UUID id) {
+        professorRepository.delete(findById(id));
     }
 
     public void updateProfessor(Professor professor, Professor obj) {
         professor.setNome(obj.getNome());
+        professor.setEmail(obj.getEmail());
+        professor.setSenhaHash(obj.getSenhaHash());
+        professor.setIntervaloMinimo(obj.getIntervaloMinimo());
     }
 
     public Professor create(Professor professor) {

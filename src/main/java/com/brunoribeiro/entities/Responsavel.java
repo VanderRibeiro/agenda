@@ -9,14 +9,15 @@ import java.util.UUID;
 public class Responsavel {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "professor", columnDefinition = "uuid")
-    private UUID professor;
-
     @Column(name = "nome", nullable = false, length = 100)
     private String nome;
+
+    @Column(name = "professor_id", nullable = false, columnDefinition = "uuid")
+    private UUID professorId;
 
     @Column(name = "telefone", length = 30)
     private String telefone;
@@ -32,12 +33,12 @@ public class Responsavel {
         this.id = id;
     }
 
-    public UUID getProfessor() {
-        return professor;
+    public UUID getProfessorId() {
+        return professorId;
     }
 
-    public void setProfessor(UUID professor) {
-        this.professor = professor;
+    public void setProfessorId(UUID professorId) {
+        this.professorId = professorId;
     }
 
     public String getNome() {

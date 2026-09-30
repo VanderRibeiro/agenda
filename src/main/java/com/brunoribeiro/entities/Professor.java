@@ -9,6 +9,7 @@ import java.util.UUID;
 public class Professor {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", columnDefinition = "uuid")
     private UUID id;
 

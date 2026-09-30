@@ -11,6 +11,7 @@ import java.util.UUID;
 public class Aluno {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", columnDefinition = "uuid")
     private UUID id;
 
