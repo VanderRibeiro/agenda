@@ -1,11 +1,10 @@
 package com.brunoribeiro.service;
 
 import com.brunoribeiro.entities.Aluno;
+import com.brunoribeiro.exception.BusinessException;
+import com.brunoribeiro.exception.ResourceNotFoundException;
 import com.brunoribeiro.repositories.AlunoRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,12 +24,16 @@ public class AlunoService {
 
     public Aluno findById(UUID id) {
         return alunoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado, ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Aluno não encontrado, ID: " + id));
     }
 
     public Aluno update(UUID id, Aluno obj) {
+        if (obj == null) {
+            throw new BusinessException("Dados do aluno não informados.");
+        }
+
         Aluno entity = alunoRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluno não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Aluno não encontrado, ID: " + id));
         updateAluno(entity, obj);
         return alunoRepository.save(entity);
     }
@@ -54,6 +57,9 @@ public class AlunoService {
     }
 
     public Aluno create(Aluno aluno) {
+        if (aluno == null) {
+            throw new BusinessException("Dados do aluno não informados.");
+        }
         return alunoRepository.save(aluno);
     }
 }

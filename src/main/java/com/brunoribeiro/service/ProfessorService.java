@@ -1,11 +1,10 @@
 package com.brunoribeiro.service;
 
 import com.brunoribeiro.entities.Professor;
+import com.brunoribeiro.exception.BusinessException;
+import com.brunoribeiro.exception.ResourceNotFoundException;
 import com.brunoribeiro.repositories.ProfessorRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,12 +24,16 @@ public class ProfessorService {
 
     public Professor findById(UUID id) {
         return professorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado, ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Professor não encontrado, ID: " + id));
     }
 
     public Professor update(UUID id, Professor obj) {
+        if (obj == null) {
+            throw new BusinessException("Dados do professor não informados.");
+        }
+
         Professor entity = professorRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Professor não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Professor não encontrado, ID: " + id));
         updateProfessor(entity, obj);
         return professorRepository.save(entity);
     }
@@ -47,6 +50,9 @@ public class ProfessorService {
     }
 
     public Professor create(Professor professor) {
+        if (professor == null) {
+            throw new BusinessException("Dados do professor não informados.");
+        }
         return professorRepository.save(professor);
     }
 }

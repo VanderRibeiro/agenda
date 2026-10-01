@@ -1,11 +1,10 @@
 package com.brunoribeiro.service;
 
 import com.brunoribeiro.entities.Responsavel;
+import com.brunoribeiro.exception.BusinessException;
+import com.brunoribeiro.exception.ResourceNotFoundException;
 import com.brunoribeiro.repositories.ResponsavelRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +24,7 @@ public class ResponsavelService {
 
     public Responsavel findById(UUID id) {
         return responsavelRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Responsável não encontrado, ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Responsável não encontrado, ID: " + id));
     }
 
     public void deleteById(UUID id) {
@@ -33,8 +32,12 @@ public class ResponsavelService {
     }
 
     public Responsavel update(UUID id, Responsavel obj) {
+        if (obj == null) {
+            throw new BusinessException("Dados do responsável não informados.");
+        }
+
         Responsavel entity = responsavelRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Responsável não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Responsável não encontrado, ID: " + id));
         updateResponsavel(entity, obj);
         return responsavelRepository.save(entity);
     }
@@ -46,6 +49,9 @@ public class ResponsavelService {
     }
 
     public Responsavel create(Responsavel responsavel) {
+        if (responsavel == null) {
+            throw new BusinessException("Dados do responsável não informados.");
+        }
         return responsavelRepository.save(responsavel);
     }
 }

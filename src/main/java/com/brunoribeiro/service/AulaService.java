@@ -1,11 +1,10 @@
 package com.brunoribeiro.service;
 
 import com.brunoribeiro.entities.Aula;
+import com.brunoribeiro.exception.BusinessException;
+import com.brunoribeiro.exception.ResourceNotFoundException;
 import com.brunoribeiro.repositories.AulaRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,12 +24,16 @@ public class AulaService {
 
     public Aula findById(UUID id) {
         return aulaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Aula não encontrada, ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Aula não encontrada, ID: " + id));
     }
 
     public Aula update(UUID id, Aula obj) {
+        if (obj == null) {
+            throw new BusinessException("Dados da aula não informados.");
+        }
+
         Aula entity = aulaRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aula não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Aula não encontrada, ID: " + id));
         updateAula(entity, obj);
         return aulaRepository.save(entity);
     }
@@ -54,6 +57,9 @@ public class AulaService {
     }
 
     public Aula create(Aula aula) {
+        if (aula == null) {
+            throw new BusinessException("Dados da aula não informados.");
+        }
         return aulaRepository.save(aula);
     }
 }
