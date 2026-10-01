@@ -1,5 +1,6 @@
 package com.brunoribeiro.entities;
 
+import com.brunoribeiro.entities.enums.StatusAula;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -40,8 +41,9 @@ public class Aula {
     @Column(name = "valor")
     private BigDecimal valor;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private StatusAula status;
 
     @Column(name = "pago")
     private Boolean pago;
@@ -125,11 +127,11 @@ public class Aula {
         this.valor = valor;
     }
 
-    public String getStatus() {
+    public StatusAula getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusAula status) {
         this.status = status;
     }
 

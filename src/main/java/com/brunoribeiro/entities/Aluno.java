@@ -1,5 +1,7 @@
 package com.brunoribeiro.entities;
 
+import com.brunoribeiro.entities.enums.DiaSemana;
+import com.brunoribeiro.entities.enums.FormaPagamento;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -30,14 +32,16 @@ public class Aluno {
     @Column(name = "endereco")
     private String endereco;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "forma_pagamento")
-    private String formaPagamento;
+    private FormaPagamento formaPagamento;
 
     @Column(name = "valor_mensal")
     private BigDecimal valorMensal;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "dia_semana_padrao")
-    private String diaSemanaPadrao;
+    private DiaSemana diaSemanaPadrao;
 
     @Column(name = "horario_padrao")
     private LocalTime horarioPadrao;
@@ -100,11 +104,11 @@ public class Aluno {
         this.endereco = endereco;
     }
 
-    public String getFormaPagamento() {
+    public FormaPagamento getFormaPagamento() {
         return formaPagamento;
     }
 
-    public void setFormaPagamento(String formaPagamento) {
+    public void setFormaPagamento(FormaPagamento formaPagamento) {
         this.formaPagamento = formaPagamento;
     }
 
@@ -116,11 +120,11 @@ public class Aluno {
         this.valorMensal = valorMensal;
     }
 
-    public String getDiaSemanaPadrao() {
+    public DiaSemana getDiaSemanaPadrao() {
         return diaSemanaPadrao;
     }
 
-    public void setDiaSemanaPadrao(String diaSemanaPadrao) {
+    public void setDiaSemanaPadrao(DiaSemana diaSemanaPadrao) {
         this.diaSemanaPadrao = diaSemanaPadrao;
     }
 
