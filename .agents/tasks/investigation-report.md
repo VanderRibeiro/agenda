@@ -208,7 +208,7 @@ Não existe `Dockerfile`, `docker-compose.yml` nem qualquer arquivo de infraestr
 
 ### Fase 1 — Fundação (Exceções, Enums, Bean Validation, DTOs)
 1. Criar enums `StatusAula`, `FormaPagamento`, `DiaSemana` no pacote `entities/enums/`
-2. Criar exceções customizadas: `ResourceNotFoundException`, `BusinessException`, `GlobalExceptionHandler`, `ErrorResponse`
+2. Criar exceções customizadas: `ResourceNotFoundException`, `BusinessException`, `GlobalExceptionHandler`, `ErrorResponseDTO`
 3. Adicionar `@NotNull`/`@NotBlank`/`@Email`/`@Size` nas entidades e criar DTOs de request/response para todos os recursos
 4. Adicionar `@Valid` nos controllers
 

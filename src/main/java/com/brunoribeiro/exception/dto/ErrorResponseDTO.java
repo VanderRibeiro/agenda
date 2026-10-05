@@ -1,18 +1,18 @@
-package com.brunoribeiro.dto;
+package com.brunoribeiro.exception.dto;
 
 import java.time.Instant;
 
-public class ErrorResponse {
+public class ErrorResponseDTO {
 
     private Instant timestamp;
     private int status;
     private String message;
     private String path;
 
-    public ErrorResponse() {
+    public ErrorResponseDTO() {
     }
 
-    public ErrorResponse(Instant timestamp, int status, String message, String path) {
+    public ErrorResponseDTO(Instant timestamp, int status, String message, String path) {
         this.timestamp = timestamp;
         this.status = status;
         this.message = message;

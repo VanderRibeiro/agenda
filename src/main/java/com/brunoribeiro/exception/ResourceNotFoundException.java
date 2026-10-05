@@ -1,12 +1,14 @@
 package com.brunoribeiro.exception;
 
-public class ResourceNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class ResourceNotFoundException extends ApplicationException {
 
     public ResourceNotFoundException(String message) {
-        super(message);
+        super(message, HttpStatus.NOT_FOUND);
     }
 
     public ResourceNotFoundException(String message, Throwable cause) {
-        super(message, cause);
+        super(message, cause, HttpStatus.NOT_FOUND);
     }
 }

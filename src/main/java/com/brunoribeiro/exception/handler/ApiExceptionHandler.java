@@ -1,6 +1,6 @@
-package com.brunoribeiro.handler;
+package com.brunoribeiro.exception.handler;
 
-import com.brunoribeiro.dto.ErrorResponse;
+import com.brunoribeiro.exception.dto.ErrorResponseDTO;
 import com.brunoribeiro.exception.BusinessException;
 import com.brunoribeiro.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,17 +15,17 @@ import java.time.Instant;
 public class ApiExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponseDTO> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponseDTO> handleBusinessException(BusinessException ex, HttpServletRequest request) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
     }
 
-    private ResponseEntity<ErrorResponse> buildResponse(HttpStatus status, String message, String path) {
-        ErrorResponse response = new ErrorResponse(
+    private ResponseEntity<ErrorResponseDTO> buildResponse(HttpStatus status, String message, String path) {
+        ErrorResponseDTO response = new ErrorResponseDTO(
                 Instant.now(),
                 status.value(),
                 message,
