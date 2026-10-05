@@ -16,6 +16,8 @@ import java.time.Instant;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+
+    //Controller ainda não possui @Valid e @RequestBody, portanto função não vai ser disparado ainda
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDTO> handleValidationException(
             MethodArgumentNotValidException ex,
@@ -28,6 +30,8 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, message, request);
     }
 
+    //Controller ainda não possui @PathVariable, @RequestParam e @NotNull, 
+    // portanto função não vai ser disparado ainda
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponseDTO> handleConstraintViolationException(
             ConstraintViolationException ex,

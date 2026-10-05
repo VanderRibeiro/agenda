@@ -2,6 +2,7 @@ package com.brunoribeiro.entities;
 
 import com.brunoribeiro.entities.enums.StatusAula;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,35 +18,44 @@ public class Aula {
     @Column(name = "id", columnDefinition = "uuid")
     private UUID id;
 
+    @NotNull(message = "O professor é obrigatório")
     @Column(name = "professor_id", nullable = false, columnDefinition = "uuid")
     private UUID professorId;
 
-    @Column(name = "aluno_id", columnDefinition = "uuid")
+    @NotNull(message = "O aluno é obrigatório")
+    @Column(name = "aluno_id", nullable = false, columnDefinition = "uuid")
     private UUID alunoId;
 
     @Column(name = "aula_original_id", columnDefinition = "uuid")
     private UUID aulaOriginalId;
 
-    @Column(name = "data")
+    @NotNull(message = "A data da aula é obrigatória")
+    @Column(name = "data", nullable = false)
     private LocalDate data;
 
-    @Column(name = "horario_inicio")
+    @NotNull(message = "O horário de início é obrigatório")
+    @Column(name = "horario_inicio", nullable = false)
     private LocalTime horarioInicio;
 
-    @Column(name = "horario_fim")
+    @NotNull(message = "O horário de fim é obrigatório")
+    @Column(name = "horario_fim", nullable = false)
     private LocalTime horarioFim;
 
-    @Column(name = "duracao_minutos")
+    @NotNull(message = "A duração da aula é obrigatória")
+    @Column(name = "duracao_minutos", nullable = false)
     private Integer duracaoMinutos;
 
-    @Column(name = "valor")
+    @NotNull(message = "O valor da aula é obrigatório")
+    @Column(name = "valor", nullable = false)
     private BigDecimal valor;
 
+    @NotNull(message = "O status da aula é obrigatório")
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private StatusAula status;
 
-    @Column(name = "pago")
+    @NotNull(message = "O campo pago é obrigatório")
+    @Column(name = "pago", nullable = false)
     private Boolean pago;
 
     @Column(name = "date_pagamento")

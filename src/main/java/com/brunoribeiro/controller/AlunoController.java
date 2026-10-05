@@ -2,6 +2,7 @@ package com.brunoribeiro.controller;
 
 import com.brunoribeiro.entities.Aluno;
 import com.brunoribeiro.service.AlunoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

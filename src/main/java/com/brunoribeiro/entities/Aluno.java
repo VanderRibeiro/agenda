@@ -3,6 +3,10 @@ package com.brunoribeiro.entities;
 import com.brunoribeiro.entities.enums.DiaSemana;
 import com.brunoribeiro.entities.enums.FormaPagamento;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
@@ -17,18 +21,29 @@ public class Aluno {
     @Column(name = "id", columnDefinition = "uuid")
     private UUID id;
 
+    @NotNull(message = "O professor é obrigatório")
     @Column(name = "professor_id", nullable = false, columnDefinition = "uuid")
     private UUID professorId;
 
     @Column(name = "responsavel_id", columnDefinition = "uuid")
     private UUID responsavelId;
 
+    @NotBlank(message = "O nome do aluno é obrigatório")
+    @Size(max = 100, message = "O nome do aluno deve ter no máximo 100 caracteres")
     @Column(name = "nome", nullable = false, length = 100)
     private String nome;
 
-    @Column(name = "telefone", length = 30)
+    @Email(message = "Informe um email válido")
+    @Size(max = 150, message = "O email do aluno deve ter no máximo 150 caracteres")
+    @Column(name = "email", nullable = false, length = 150)
+    private String email;
+
+    @NotBlank(message = "O telefone do aluno é obrigatório")
+    @Size(max = 30, message = "O telefone do aluno deve ter no máximo 30 caracteres")
+    @Column(name = "telefone", nullable = false, length = 30)
     private String telefone;
 
+    @Size(max = 255, message = "O endereço do aluno deve ter no máximo 255 caracteres")
     @Column(name = "endereco")
     private String endereco;
 
@@ -86,6 +101,14 @@ public class Aluno {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getTelefone() {
