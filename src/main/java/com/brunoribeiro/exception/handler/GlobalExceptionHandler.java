@@ -1,7 +1,10 @@
 package com.brunoribeiro.exception.handler;
 
 import com.brunoribeiro.exception.ApplicationException;
+import com.brunoribeiro.exception.BusinessException;
+import com.brunoribeiro.exception.ResourceNotFoundException;
 import com.brunoribeiro.exception.dto.ErrorResponseDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +19,18 @@ import java.time.Instant;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI());
+    }
 
-    //Controller ainda não possui @Valid e @RequestBody, portanto função não vai ser disparado ainda
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponseDTO> handleBusinessException(BusinessException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponseDTO> handleValidationException(
-            MethodArgumentNotValidException ex,
-            WebRequest request) {
-
+    public ResponseEntity<ErrorResponseDTO> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
         String message = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(java.util.stream.Collectors.joining(", "));
@@ -30,30 +38,18 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, message, request);
     }
 
-    //Controller ainda não possui @PathVariable, @RequestParam e @NotNull, 
-    // portanto função não vai ser disparado ainda
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponseDTO> handleConstraintViolationException(
-            ConstraintViolationException ex,
-            WebRequest request) {
+    public ResponseEntity<ErrorResponseDTO> handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponseDTO> handleHttpMessageNotReadableException(
-            HttpMessageNotReadableException ex,
-            WebRequest request) {
-        return buildResponse(
-                HttpStatus.BAD_REQUEST,
-                "JSON inválido ou campo com formato incorreto",
-                request);
+    public ResponseEntity<ErrorResponseDTO> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, WebRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "JSON inválido ou campo com formato incorreto", request);
     }
 
     @ExceptionHandler(ApplicationException.class)
-    public ResponseEntity<ErrorResponseDTO> handleApplicationException(
-            ApplicationException ex,
-            WebRequest request) {
-
+    public ResponseEntity<ErrorResponseDTO> handleApplicationException(ApplicationException ex, WebRequest request) {
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 Instant.now(),
                 ex.getStatus().value(),
@@ -64,10 +60,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDTO> handleGenericException(
-            Exception ex,
-            WebRequest request) {
-
+    public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex, WebRequest request) {
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 Instant.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -80,10 +73,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ResponseEntity<ErrorResponseDTO> buildResponse(
-            HttpStatus status,
-            String message,
-            WebRequest request) {
+    private ResponseEntity<ErrorResponseDTO> buildResponse(HttpStatus status, String message, WebRequest request) {
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 Instant.now(),
                 status.value(),
@@ -91,6 +81,16 @@ public class GlobalExceptionHandler {
                 extractPath(request)
         );
         return new ResponseEntity<>(errorResponseDTO, status);
+    }
+
+    private ResponseEntity<ErrorResponseDTO> buildResponse(HttpStatus status, String message, String path) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
+                Instant.now(),
+                status.value(),
+                message,
+                path
+        );
+        return ResponseEntity.status(status).body(errorResponseDTO);
     }
 
     private String extractPath(WebRequest request) {
