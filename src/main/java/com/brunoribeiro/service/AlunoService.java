@@ -35,6 +35,7 @@ public class AlunoService {
         Aluno entity = alunoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Aluno não encontrado, ID: " + id));
         updateAluno(entity, obj);
+        validarEmailObrigatorioSemResponsavel(entity);
         return alunoRepository.save(entity);
     }
 
@@ -46,6 +47,7 @@ public class AlunoService {
         aluno.setProfessorId(obj.getProfessorId());
         aluno.setResponsavelId(obj.getResponsavelId());
         aluno.setNome(obj.getNome());
+        aluno.setEmail(obj.getEmail());
         aluno.setTelefone(obj.getTelefone());
         aluno.setEndereco(obj.getEndereco());
         aluno.setFormaPagamento(obj.getFormaPagamento());
@@ -60,6 +62,14 @@ public class AlunoService {
         if (aluno == null) {
             throw new BusinessException("Dados do aluno não informados.");
         }
+        validarEmailObrigatorioSemResponsavel(aluno);
         return alunoRepository.save(aluno);
+    }
+
+    private void validarEmailObrigatorioSemResponsavel(Aluno aluno) {
+        if (aluno.getResponsavelId() == null
+                && (aluno.getEmail() == null || aluno.getEmail().isBlank())) {
+            throw new BusinessException("O email do aluno é obrigatório quando não há responsável.");
+        }
     }
 }

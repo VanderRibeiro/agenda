@@ -4,6 +4,7 @@ import com.brunoribeiro.dto.request.ProfessorRequestDTO;
 import com.brunoribeiro.dto.response.ProfessorResponseDTO;
 import com.brunoribeiro.service.ProfessorService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +52,8 @@ public class ProfessorController {
     }
 
     @PostMapping
-    public ProfessorResponseDTO create(@RequestBody @Valid ProfessorRequestDTO professorRequestDTO) {
-        return ProfessorResponseDTO.fromEntity(professorService.create(professorRequestDTO.toEntity()));
+    public ResponseEntity<ProfessorResponseDTO> create(@RequestBody @Valid ProfessorRequestDTO professorRequestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ProfessorResponseDTO.fromEntity(professorService.create(professorRequestDTO.toEntity())));
     }
 }

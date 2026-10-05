@@ -4,6 +4,7 @@ import com.brunoribeiro.dto.request.ResponsavelRequestDTO;
 import com.brunoribeiro.dto.response.ResponsavelResponseDTO;
 import com.brunoribeiro.service.ResponsavelService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +52,8 @@ public class ResponsavelController {
     }
 
     @PostMapping
-    public ResponsavelResponseDTO create(@RequestBody @Valid ResponsavelRequestDTO responsavelRequestDTO) {
-        return ResponsavelResponseDTO.fromEntity(responsavelService.create(responsavelRequestDTO.toEntity()));
+    public ResponseEntity<ResponsavelResponseDTO> create(@RequestBody @Valid ResponsavelRequestDTO responsavelRequestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponsavelResponseDTO.fromEntity(responsavelService.create(responsavelRequestDTO.toEntity())));
     }
 }

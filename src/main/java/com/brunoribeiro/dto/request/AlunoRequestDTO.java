@@ -3,6 +3,7 @@ package com.brunoribeiro.dto.request;
 import com.brunoribeiro.entities.Aluno;
 import com.brunoribeiro.entities.enums.DiaSemana;
 import com.brunoribeiro.entities.enums.FormaPagamento;
+import com.brunoribeiro.exception.BusinessException;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -61,11 +62,27 @@ public record AlunoRequestDTO(
         aluno.setEmail(this.email);
         aluno.setTelefone(this.telefone);
         aluno.setEndereco(this.endereco);
-        aluno.setFormaPagamento(this.formaPagamento != null ? FormaPagamento.valueOf(this.formaPagamento.trim().toUpperCase()) : null);
+
+        if (this.formaPagamento != null) {
+            try {
+                aluno.setFormaPagamento(FormaPagamento.valueOf(this.formaPagamento.trim().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                throw new BusinessException("Forma de pagamento inválida: '" + this.formaPagamento
+                        + "'. Valores aceitos: DIARIO, MENSAL.");
+            }
+        }
+
         aluno.setValorMensal(this.valorMensal);
-        aluno.setDiaSemanaPadrao(this.diaSemanaPadrao != null && !this.diaSemanaPadrao.isBlank()
-                ? DiaSemana.valueOf(this.diaSemanaPadrao.trim().toUpperCase())
-                : null);
+
+        if (this.diaSemanaPadrao != null && !this.diaSemanaPadrao.isBlank()) {
+            try {
+                aluno.setDiaSemanaPadrao(DiaSemana.valueOf(this.diaSemanaPadrao.trim().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                throw new BusinessException("Dia da semana inválido: '" + this.diaSemanaPadrao
+                        + "'. Valores aceitos: SEGUNDA, TERCA, QUARTA, QUINTA, SEXTA, SABADO, DOMINGO.");
+            }
+        }
+
         aluno.setHorarioPadrao(this.horarioPadrao);
         aluno.setDuracaoPadraoMin(this.duracaoPadraoMin);
         aluno.setValorPadrao(this.valorPadrao);
