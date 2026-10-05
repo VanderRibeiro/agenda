@@ -35,7 +35,7 @@ public class Aluno {
 
     @Email(message = "Informe um email válido")
     @Size(max = 150, message = "O email do aluno deve ter no máximo 150 caracteres")
-    @Column(name = "email", nullable = false, length = 150)
+    @Column(name = "email", length = 150)
     private String email;
 
     @NotBlank(message = "O telefone do aluno é obrigatório")
