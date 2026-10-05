@@ -1,7 +1,9 @@
 package com.brunoribeiro.controller;
 
-import com.brunoribeiro.entities.Aula;
+import com.brunoribeiro.dto.request.AulaRequestDTO;
+import com.brunoribeiro.dto.response.AulaResponseDTO;
 import com.brunoribeiro.service.AulaService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,13 +28,15 @@ public class AulaController {
     }
 
     @GetMapping
-    public List<Aula> findAll() {
-        return aulaService.findAll();
+    public List<AulaResponseDTO> findAll() {
+        return aulaService.findAll().stream()
+                .map(AulaResponseDTO::fromEntity)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Aula findById(@PathVariable UUID id) {
-        return aulaService.findById(id);
+    public AulaResponseDTO findById(@PathVariable UUID id) {
+        return AulaResponseDTO.fromEntity(aulaService.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -42,12 +46,12 @@ public class AulaController {
     }
 
     @PutMapping("/{id}")
-    public Aula update(@PathVariable UUID id, @RequestBody Aula aula) {
-        return aulaService.update(id, aula);
+    public AulaResponseDTO update(@PathVariable UUID id, @RequestBody @Valid AulaRequestDTO aulaRequestDTO) {
+        return AulaResponseDTO.fromEntity(aulaService.update(id, aulaRequestDTO.toEntity()));
     }
 
     @PostMapping
-    public Aula create(@RequestBody Aula aula) {
-        return aulaService.create(aula);
+    public AulaResponseDTO create(@RequestBody @Valid AulaRequestDTO aulaRequestDTO) {
+        return AulaResponseDTO.fromEntity(aulaService.create(aulaRequestDTO.toEntity()));
     }
 }

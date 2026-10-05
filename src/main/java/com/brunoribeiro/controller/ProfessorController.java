@@ -1,7 +1,9 @@
 package com.brunoribeiro.controller;
 
-import com.brunoribeiro.entities.Professor;
+import com.brunoribeiro.dto.request.ProfessorRequestDTO;
+import com.brunoribeiro.dto.response.ProfessorResponseDTO;
 import com.brunoribeiro.service.ProfessorService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,13 +28,15 @@ public class ProfessorController {
     }
 
     @GetMapping
-    public List<Professor> findAll() {
-        return professorService.findAll();
+    public List<ProfessorResponseDTO> findAll() {
+        return professorService.findAll().stream()
+                .map(ProfessorResponseDTO::fromEntity)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Professor findById(@PathVariable UUID id) {
-        return professorService.findById(id);
+    public ProfessorResponseDTO findById(@PathVariable UUID id) {
+        return ProfessorResponseDTO.fromEntity(professorService.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -42,12 +46,12 @@ public class ProfessorController {
     }
 
     @PutMapping("/{id}")
-    public Professor update(@PathVariable UUID id, @RequestBody Professor professor) {
-        return professorService.update(id, professor);
+    public ProfessorResponseDTO update(@PathVariable UUID id, @RequestBody @Valid ProfessorRequestDTO professorRequestDTO) {
+        return ProfessorResponseDTO.fromEntity(professorService.update(id, professorRequestDTO.toEntity()));
     }
 
     @PostMapping
-    public Professor create(@RequestBody Professor professor) {
-        return professorService.create(professor);
+    public ProfessorResponseDTO create(@RequestBody @Valid ProfessorRequestDTO professorRequestDTO) {
+        return ProfessorResponseDTO.fromEntity(professorService.create(professorRequestDTO.toEntity()));
     }
 }

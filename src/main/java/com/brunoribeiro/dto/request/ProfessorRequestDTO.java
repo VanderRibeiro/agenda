@@ -1,5 +1,6 @@
 package com.brunoribeiro.dto.request;
 
+import com.brunoribeiro.entities.Professor;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,4 +23,12 @@ public record ProfessorRequestDTO(
         @NotNull(message = "O intervalo mínimo é obrigatório")
         Integer intervaloMinimo
 ) {
+    public Professor toEntity() {
+        Professor professor = new Professor();
+        professor.setNome(this.nome);
+        professor.setEmail(this.email);
+        professor.setSenhaHash(this.senhaHash);
+        professor.setIntervaloMinimo(this.intervaloMinimo);
+        return professor;
+    }
 }

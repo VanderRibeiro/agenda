@@ -1,5 +1,6 @@
 package com.brunoribeiro.dto.request;
 
+import com.brunoribeiro.entities.Aluno;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,4 +30,14 @@ public record AlunoRequestDTO(
         @Size(max = 255, message = "O endereço do aluno deve ter no máximo 255 caracteres")
         String endereco
 ) {
+    public Aluno toEntity() {
+        Aluno aluno = new Aluno();
+        aluno.setProfessorId(this.professorId);
+        aluno.setResponsavelId(this.responsavelId);
+        aluno.setNome(this.nome);
+        aluno.setEmail(this.email);
+        aluno.setTelefone(this.telefone);
+        aluno.setEndereco(this.endereco);
+        return aluno;
+    }
 }

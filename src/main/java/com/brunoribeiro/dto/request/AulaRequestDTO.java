@@ -1,5 +1,6 @@
 package com.brunoribeiro.dto.request;
 
+import com.brunoribeiro.entities.Aula;
 import com.brunoribeiro.entities.enums.StatusAula;
 import jakarta.validation.constraints.NotNull;
 
@@ -40,4 +41,19 @@ public record AulaRequestDTO(
 
         LocalDate datePagamento
 ) {
+    public Aula toEntity() {
+        Aula aula = new Aula();
+        aula.setProfessorId(this.professorId);
+        aula.setAlunoId(this.alunoId);
+        aula.setAulaOriginalId(this.aulaOriginalId);
+        aula.setData(this.data);
+        aula.setHorarioInicio(this.horarioInicio);
+        aula.setHorarioFim(this.horarioFim);
+        aula.setDuracaoMinutos(this.duracaoMinutos);
+        aula.setValor(this.valor);
+        aula.setStatus(this.status);
+        aula.setPago(this.pago);
+        aula.setDatePagamento(this.datePagamento);
+        return aula;
+    }
 }

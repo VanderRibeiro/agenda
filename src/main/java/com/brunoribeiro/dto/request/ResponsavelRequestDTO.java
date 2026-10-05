@@ -1,5 +1,6 @@
 package com.brunoribeiro.dto.request;
 
+import com.brunoribeiro.entities.Responsavel;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,4 +19,11 @@ public record ResponsavelRequestDTO(
         @Size(max = 30, message = "O telefone do responsável deve ter no máximo 30 caracteres")
         String telefone
 ) {
+    public Responsavel toEntity() {
+        Responsavel responsavel = new Responsavel();
+        responsavel.setNome(this.nome);
+        responsavel.setProfessorId(this.professorId);
+        responsavel.setTelefone(this.telefone);
+        return responsavel;
+    }
 }

@@ -1,7 +1,9 @@
 package com.brunoribeiro.controller;
 
-import com.brunoribeiro.entities.Responsavel;
+import com.brunoribeiro.dto.request.ResponsavelRequestDTO;
+import com.brunoribeiro.dto.response.ResponsavelResponseDTO;
 import com.brunoribeiro.service.ResponsavelService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,13 +28,15 @@ public class ResponsavelController {
     }
 
     @GetMapping
-    public List<Responsavel> findAll() {
-        return responsavelService.findAll();
+    public List<ResponsavelResponseDTO> findAll() {
+        return responsavelService.findAll().stream()
+                .map(ResponsavelResponseDTO::fromEntity)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Responsavel findById(@PathVariable UUID id) {
-        return responsavelService.findById(id);
+    public ResponsavelResponseDTO findById(@PathVariable UUID id) {
+        return ResponsavelResponseDTO.fromEntity(responsavelService.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -42,12 +46,12 @@ public class ResponsavelController {
     }
 
     @PutMapping("/{id}")
-    public Responsavel update(@PathVariable UUID id, @RequestBody Responsavel responsavel) {
-        return responsavelService.update(id, responsavel);
+    public ResponsavelResponseDTO update(@PathVariable UUID id, @RequestBody @Valid ResponsavelRequestDTO responsavelRequestDTO) {
+        return ResponsavelResponseDTO.fromEntity(responsavelService.update(id, responsavelRequestDTO.toEntity()));
     }
 
     @PostMapping
-    public Responsavel create(@RequestBody Responsavel responsavel) {
-        return responsavelService.create(responsavel);
+    public ResponsavelResponseDTO create(@RequestBody @Valid ResponsavelRequestDTO responsavelRequestDTO) {
+        return ResponsavelResponseDTO.fromEntity(responsavelService.create(responsavelRequestDTO.toEntity()));
     }
 }

@@ -1,6 +1,7 @@
 package com.brunoribeiro.controller;
 
-import com.brunoribeiro.entities.Aluno;
+import com.brunoribeiro.dto.request.AlunoRequestDTO;
+import com.brunoribeiro.dto.response.AlunoResponseDTO;
 import com.brunoribeiro.service.AlunoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +28,15 @@ public class AlunoController {
     }
 
     @GetMapping
-    public List<Aluno> findAll() {
-        return alunoService.findAll();
+    public List<AlunoResponseDTO> findAll() {
+        return alunoService.findAll().stream()
+                .map(AlunoResponseDTO::fromEntity)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Aluno findById(@PathVariable UUID id) {
-        return alunoService.findById(id);
+    public AlunoResponseDTO findById(@PathVariable UUID id) {
+        return AlunoResponseDTO.fromEntity(alunoService.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -43,12 +46,12 @@ public class AlunoController {
     }
 
     @PutMapping("/{id}")
-    public Aluno update(@PathVariable UUID id, @RequestBody Aluno aluno) {
-        return alunoService.update(id, aluno);
+    public AlunoResponseDTO update(@PathVariable UUID id, @RequestBody @Valid AlunoRequestDTO alunoRequestDTO) {
+        return AlunoResponseDTO.fromEntity(alunoService.update(id, alunoRequestDTO.toEntity()));
     }
 
     @PostMapping
-    public Aluno create(@RequestBody Aluno aluno) {
-        return alunoService.create(aluno);
+    public AlunoResponseDTO create(@RequestBody @Valid AlunoRequestDTO alunoRequestDTO) {
+        return AlunoResponseDTO.fromEntity(alunoService.create(alunoRequestDTO.toEntity()));
     }
 }
