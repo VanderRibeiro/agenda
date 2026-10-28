@@ -1,4 +1,4 @@
 package com.brunoribeiro.dto;
 
-public record AuthenticationDTO(String login, String password) {
+public record AuthenticationDTO(String nome, String login, String password) {
 }

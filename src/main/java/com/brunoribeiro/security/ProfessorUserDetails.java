@@ -24,12 +24,12 @@ public class ProfessorUserDetails implements UserDetails {
 
     @Override
     public @Nullable String getPassword() {
-        return "";
+        return professor.getSenhaHash();
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return professor.getEmail();
     }
 
     @Override
