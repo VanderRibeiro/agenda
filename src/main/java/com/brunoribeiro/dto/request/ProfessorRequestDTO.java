@@ -27,7 +27,7 @@ public record ProfessorRequestDTO(
         Professor professor = new Professor();
         professor.setNome(this.nome);
         professor.setEmail(this.email);
-        professor.setSenhaHash(this.senhaHash);
+        professor.setPassword(this.senhaHash);
         professor.setIntervaloMinimo(this.intervaloMinimo);
         return professor;
     }

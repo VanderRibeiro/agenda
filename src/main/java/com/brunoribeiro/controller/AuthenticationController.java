@@ -1,6 +1,8 @@
 package com.brunoribeiro.controller;
 
+import com.brunoribeiro.config.TokenService;
 import com.brunoribeiro.dto.AuthenticationDTO;
+import com.brunoribeiro.dto.LoginResponseDTO;
 import com.brunoribeiro.entities.Professor;
 import com.brunoribeiro.repositories.ProfessorRepository;
 import jakarta.validation.Valid;
@@ -23,6 +25,9 @@ public class AuthenticationController {
     @Autowired
     private ProfessorRepository professorRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(
@@ -31,13 +36,15 @@ public class AuthenticationController {
         );
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.gerarToken((Professor) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
-    //Se for criar ROLES será necessário criar um registerDTO com role como parâmetro.
+    //Se for criar ROLES será necessário criar um registerDTO adicionando role como parâmetro.
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid AuthenticationDTO data) {
-        if(this.professorRepository.findByEmail(data.login()).isPresent()) return ResponseEntity.badRequest().build();
+        if(this.professorRepository.findByEmail(data.login()) != null) return ResponseEntity.badRequest().build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         Professor newProfessor = new Professor(data.nome(), data.login(), encryptedPassword);

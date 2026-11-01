@@ -45,7 +45,7 @@ public class ProfessorService {
     public void updateProfessor(Professor professor, Professor obj) {
         professor.setNome(obj.getNome());
         professor.setEmail(obj.getEmail());
-        professor.setSenhaHash(obj.getSenhaHash());
+        professor.setPassword(obj.getPassword());
         professor.setIntervaloMinimo(obj.getIntervaloMinimo());
     }
 

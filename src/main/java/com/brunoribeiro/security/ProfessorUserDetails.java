@@ -24,7 +24,7 @@ public class ProfessorUserDetails implements UserDetails {
 
     @Override
     public @Nullable String getPassword() {
-        return professor.getSenhaHash();
+        return professor.getPassword();
     }
 
     @Override

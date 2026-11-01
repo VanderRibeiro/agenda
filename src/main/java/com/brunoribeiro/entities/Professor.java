@@ -31,7 +31,7 @@ public class Professor {
     @NotBlank(message = "A senha do professor é obrigatória")
     @Size(max = 255, message = "A senha do professor deve ter no máximo 255 caracteres")
     @Column(name = "senha_hash", nullable = false)
-    private String senhaHash;
+    private String password;
 
     @Column(name = "intervalo_minimo", nullable = false)
     private Integer intervaloMinimo = 15;
@@ -42,7 +42,7 @@ public class Professor {
     public Professor(String nome, String login, String encryptedPassword) {
         this.nome = nome;
         this.email = login;
-        this.senhaHash = encryptedPassword;
+        this.password = encryptedPassword;
     }
 
     public UUID getId() {
@@ -65,15 +65,14 @@ public class Professor {
         return email;
     }
 
-    public void setEmail(String email) { this.email = email;
+    public void setEmail(String email) { this.email = email;  }
+
+    public String getPassword() {
+        return password;
     }
 
-    public String getSenhaHash() {
-        return senhaHash;
-    }
-
-    public void setSenhaHash(String senhaHash) {
-        this.senhaHash = senhaHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Integer getIntervaloMinimo() {

@@ -9,18 +9,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class ProfessorUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    ProfessorRepository professorRepository;
+    private final ProfessorRepository professorRepository;
+
+    public ProfessorUserDetailsService(ProfessorRepository professorRepository) {
+        this.professorRepository = professorRepository;
+    }
 
     @Override
-    public UserDetails loadUserByUsername(String email){
-        return professorRepository.findByEmail(email)
-                .map(ProfessorUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("Professor não encontrado com o email: " + email));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Professor professor = professorRepository.findByEmail(email);
+        if (professor == null) {
+            throw new UsernameNotFoundException("Professor não encontrado: " + email);
+        }
+        return new ProfessorUserDetails(professor);
     }
+
 }
