@@ -5,6 +5,7 @@ import com.brunoribeiro.dto.AuthenticationDTO;
 import com.brunoribeiro.dto.LoginResponseDTO;
 import com.brunoribeiro.entities.Professor;
 import com.brunoribeiro.repositories.ProfessorRepository;
+import com.brunoribeiro.security.ProfessorUserDetails;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,11 +35,12 @@ public class AuthenticationController {
                 data.login(),
                 data.password()
         );
-        var auth = this.authenticationManager.authenticate(usernamePassword);
-
-        var token = tokenService.gerarToken((Professor) auth.getPrincipal());
+        var auth = authenticationManager.authenticate(usernamePassword);
+        var userDetails = (ProfessorUserDetails) auth.getPrincipal();
+        var token = tokenService.gerarToken(userDetails.getProfessor());
 
         return ResponseEntity.ok(new LoginResponseDTO(token));
+
     }
 
     //Se for criar ROLES será necessário criar um registerDTO adicionando role como parâmetro.

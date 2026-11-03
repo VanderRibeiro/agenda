@@ -20,11 +20,9 @@ public class ProfessorUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Professor professor = professorRepository.findByEmail(email);
-        if (professor == null) {
-            throw new UsernameNotFoundException("Professor não encontrado: " + email);
-        }
-        return new ProfessorUserDetails(professor);
+        return professorRepository.findByEmail(email)
+                .map(ProfessorUserDetails::new)
+                .orElseThrow(() -> new UsernameNotFoundException("Professor não encontrado: " + email));
     }
 
 }

@@ -51,4 +51,6 @@ public class ProfessorUserDetails implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+    public Professor getProfessor() { return professor; }
 }
