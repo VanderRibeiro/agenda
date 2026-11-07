@@ -4,13 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.brunoribeiro.entities.Professor;
-import com.brunoribeiro.security.ProfessorUserDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.UUID;
 
 @Service
 public class TokenService {
@@ -24,6 +24,7 @@ public class TokenService {
             String token = JWT.create()
                     .withIssuer("auth-api")
                     .withSubject(professor.getEmail())
+                    .withClaim("professorId", professor.getId().toString())
                     .withExpiresAt(dataExpiracao())
                     .sign(algorithm);
             return token;
@@ -40,6 +41,20 @@ public class TokenService {
                     .build()
                     .verify(token)
                     .getSubject();
+        } catch (Exception exception) {
+            throw new RuntimeException("Token JWT inválido ou expirado", exception);
+        }
+    }
+
+    public UUID extractProfessorId(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            var decodedJWT = JWT.require(algorithm)
+                    .withIssuer("auth-api")
+                    .build()
+                    .verify(token);
+            String id = decodedJWT.getClaim("professorId").asString();
+            return id != null ? UUID.fromString(id) : null;
         } catch (Exception exception) {
             throw new RuntimeException("Token JWT inválido ou expirado", exception);
         }

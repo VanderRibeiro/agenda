@@ -4,6 +4,7 @@ import com.brunoribeiro.entities.Professor;
 import com.brunoribeiro.exception.BusinessException;
 import com.brunoribeiro.exception.ResourceNotFoundException;
 import com.brunoribeiro.repositories.ProfessorRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +14,11 @@ import java.util.UUID;
 public class ProfessorService {
 
     private final ProfessorRepository professorRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public ProfessorService(ProfessorRepository professorRepository) {
+    public ProfessorService(ProfessorRepository professorRepository, PasswordEncoder passwordEncoder) {
         this.professorRepository = professorRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Professor> findAll() {
@@ -45,7 +48,7 @@ public class ProfessorService {
     public void updateProfessor(Professor professor, Professor obj) {
         professor.setNome(obj.getNome());
         professor.setEmail(obj.getEmail());
-        professor.setPassword(obj.getPassword());
+        professor.setPassword(passwordEncoder.encode(obj.getPassword()));
         professor.setIntervaloMinimo(obj.getIntervaloMinimo());
     }
 
@@ -53,6 +56,7 @@ public class ProfessorService {
         if (professor == null) {
             throw new BusinessException("Dados do professor não informados.");
         }
+        professor.setPassword(passwordEncoder.encode(professor.getPassword()));
         return professorRepository.save(professor);
     }
 }
