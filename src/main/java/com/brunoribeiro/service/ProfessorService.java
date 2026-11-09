@@ -4,6 +4,9 @@ import com.brunoribeiro.entities.Professor;
 import com.brunoribeiro.exception.BusinessException;
 import com.brunoribeiro.exception.ResourceNotFoundException;
 import com.brunoribeiro.repositories.ProfessorRepository;
+import com.brunoribeiro.security.ProfessorUserDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +25,21 @@ public class ProfessorService {
     }
 
     public List<Professor> findAll() {
-        return professorRepository.findAll();
+        UUID professorId = getCurrentProfessorId();
+        if (professorId == null) {
+            return List.of();
+        }
+        return professorRepository.findById(professorId)
+                .map(List::of)
+                .orElse(List.of());
+    }
+
+    private UUID getCurrentProfessorId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof ProfessorUserDetails userDetails)) {
+            return null;
+        }
+        return userDetails.getProfessor().getId();
     }
 
     public Professor findById(UUID id) {
