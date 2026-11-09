@@ -23,8 +23,10 @@ public class AlunoService extends BaseService {
     }
 
     public Aluno findById(UUID id) {
-        return alunoRepository.findById(id)
+        Aluno aluno = alunoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Aluno não encontrado, ID: " + id));
+        ensureProfessorAccess(aluno.getProfessorId(), "aluno");
+        return aluno;
     }
 
     public Aluno update(UUID id, Aluno obj) {
@@ -34,13 +36,18 @@ public class AlunoService extends BaseService {
 
         Aluno entity = alunoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Aluno não encontrado, ID: " + id));
+        ensureProfessorAccess(entity.getProfessorId(), "aluno");
         updateAluno(entity, obj);
+        entity.setProfessorId(requireCurrentProfessorId());
         validarEmailObrigatorioSemResponsavel(entity);
         return alunoRepository.save(entity);
     }
 
     public void deleteById(UUID id) {
-        alunoRepository.delete(findById(id));
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Aluno não encontrado, ID: " + id));
+        ensureProfessorAccess(aluno.getProfessorId(), "aluno");
+        alunoRepository.delete(aluno);
     }
 
     public void updateAluno(Aluno aluno, Aluno obj) {
@@ -62,6 +69,8 @@ public class AlunoService extends BaseService {
         if (aluno == null) {
             throw new BusinessException("Dados do aluno não informados.");
         }
+        UUID professorId = requireCurrentProfessorId();
+        aluno.setProfessorId(professorId);
         validarEmailObrigatorioSemResponsavel(aluno);
         return alunoRepository.save(aluno);
     }

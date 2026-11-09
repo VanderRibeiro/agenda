@@ -27,8 +27,10 @@ public class AulaService extends BaseService {
     }
 
     public Aula findById(UUID id) {
-        return aulaRepository.findById(id)
+        Aula aula = aulaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Aula não encontrada, ID: " + id));
+        ensureProfessorAccess(aula.getProfessorId(), "aula");
+        return aula;
     }
 
     public Aula update(UUID id, Aula obj) {
@@ -38,12 +40,17 @@ public class AulaService extends BaseService {
 
         Aula entity = aulaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Aula não encontrada, ID: " + id));
+        ensureProfessorAccess(entity.getProfessorId(), "aula");
         updateAula(entity, obj);
+        entity.setProfessorId(requireCurrentProfessorId());
         return aulaRepository.save(entity);
     }
 
     public void deleteById(UUID id) {
-        aulaRepository.delete(findById(id));
+        Aula aula = aulaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Aula não encontrada, ID: " + id));
+        ensureProfessorAccess(aula.getProfessorId(), "aula");
+        aulaRepository.delete(aula);
     }
 
     public void updateAula(Aula aula, Aula obj) {
@@ -64,6 +71,7 @@ public class AulaService extends BaseService {
         if (aula == null) {
             throw new BusinessException("Dados da aula não informados.");
         }
+        aula.setProfessorId(requireCurrentProfessorId());
         return aulaRepository.save(aula);
     }
 }

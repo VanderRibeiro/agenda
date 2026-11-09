@@ -24,4 +24,11 @@ public abstract class BaseService {
         }
         return professorId;
     }
+
+    protected void ensureProfessorAccess(UUID resourceProfessorId, String resourceName) {
+        UUID currentProfessorId = requireCurrentProfessorId();
+        if (resourceProfessorId == null || !resourceProfessorId.equals(currentProfessorId)) {
+            throw new AccessDeniedException("Você não tem acesso a este " + resourceName + ".");
+        }
+    }
 }

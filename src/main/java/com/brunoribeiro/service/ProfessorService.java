@@ -32,8 +32,10 @@ public class ProfessorService extends BaseService {
     }
 
     public Professor findById(UUID id) {
-        return professorRepository.findById(id)
+        Professor professor = professorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Professor não encontrado, ID: " + id));
+        ensureProfessorAccess(professor.getId(), "professor");
+        return professor;
     }
 
     public Professor update(UUID id, Professor obj) {
@@ -43,12 +45,16 @@ public class ProfessorService extends BaseService {
 
         Professor entity = professorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Professor não encontrado, ID: " + id));
+        ensureProfessorAccess(entity.getId(), "professor");
         updateProfessor(entity, obj);
         return professorRepository.save(entity);
     }
 
     public void deleteById(UUID id) {
-        professorRepository.delete(findById(id));
+        Professor professor = professorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Professor não encontrado, ID: " + id));
+        ensureProfessorAccess(professor.getId(), "professor");
+        professorRepository.delete(professor);
     }
 
     public void updateProfessor(Professor professor, Professor obj) {

@@ -27,12 +27,17 @@ public class ResponsavelService extends BaseService {
     }
 
     public Responsavel findById(UUID id) {
-        return responsavelRepository.findById(id)
+        Responsavel responsavel = responsavelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Responsável não encontrado, ID: " + id));
+        ensureProfessorAccess(responsavel.getProfessorId(), "responsável");
+        return responsavel;
     }
 
     public void deleteById(UUID id) {
-        responsavelRepository.delete(findById(id));
+        Responsavel responsavel = responsavelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Responsável não encontrado, ID: " + id));
+        ensureProfessorAccess(responsavel.getProfessorId(), "responsável");
+        responsavelRepository.delete(responsavel);
     }
 
     public Responsavel update(UUID id, Responsavel obj) {
@@ -42,7 +47,9 @@ public class ResponsavelService extends BaseService {
 
         Responsavel entity = responsavelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Responsável não encontrado, ID: " + id));
+        ensureProfessorAccess(entity.getProfessorId(), "responsável");
         updateResponsavel(entity, obj);
+        entity.setProfessorId(requireCurrentProfessorId());
         return responsavelRepository.save(entity);
     }
 
@@ -56,6 +63,7 @@ public class ResponsavelService extends BaseService {
         if (responsavel == null) {
             throw new BusinessException("Dados do responsável não informados.");
         }
+        responsavel.setProfessorId(requireCurrentProfessorId());
         return responsavelRepository.save(responsavel);
     }
 }
