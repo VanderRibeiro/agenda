@@ -4,16 +4,13 @@ import com.brunoribeiro.entities.Responsavel;
 import com.brunoribeiro.exception.BusinessException;
 import com.brunoribeiro.exception.ResourceNotFoundException;
 import com.brunoribeiro.repositories.ResponsavelRepository;
-import com.brunoribeiro.security.ProfessorUserDetails;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ResponsavelService {
+public class ResponsavelService extends BaseService {
 
     private final ResponsavelRepository responsavelRepository;
 
@@ -27,14 +24,6 @@ public class ResponsavelService {
             return List.of();
         }
         return responsavelRepository.findAllByProfessorId(professorId);
-    }
-
-    private UUID getCurrentProfessorId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !(authentication.getPrincipal() instanceof ProfessorUserDetails userDetails)) {
-            return null;
-        }
-        return userDetails.getProfessor().getId();
     }
 
     public Responsavel findById(UUID id) {

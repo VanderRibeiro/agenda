@@ -4,16 +4,13 @@ import com.brunoribeiro.entities.Aula;
 import com.brunoribeiro.exception.BusinessException;
 import com.brunoribeiro.exception.ResourceNotFoundException;
 import com.brunoribeiro.repositories.AulaRepository;
-import com.brunoribeiro.security.ProfessorUserDetails;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class AulaService {
+public class AulaService extends BaseService {
 
     private final AulaRepository aulaRepository;
 
@@ -27,14 +24,6 @@ public class AulaService {
             return List.of();
         }
         return aulaRepository.findAllByProfessorId(professorId);
-    }
-
-    private UUID getCurrentProfessorId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !(authentication.getPrincipal() instanceof ProfessorUserDetails userDetails)) {
-            return null;
-        }
-        return userDetails.getProfessor().getId();
     }
 
     public Aula findById(UUID id) {

@@ -4,17 +4,13 @@ import com.brunoribeiro.entities.Aluno;
 import com.brunoribeiro.exception.BusinessException;
 import com.brunoribeiro.exception.ResourceNotFoundException;
 import com.brunoribeiro.repositories.AlunoRepository;
-import com.brunoribeiro.security.ProfessorUserDetails;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class AlunoService {
+public class AlunoService extends BaseService {
 
     private final AlunoRepository alunoRepository;
 
@@ -23,15 +19,7 @@ public class AlunoService {
     }
 
     public List<Aluno> findAll() {
-        return alunoRepository.findAllByProfessorId(getCurrentProfessorId());
-    }
-
-    private UUID getCurrentProfessorId() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !(authentication.getPrincipal() instanceof ProfessorUserDetails userDetails)) {
-            throw new AccessDeniedException("Professor não autenticado");
-        }
-        return userDetails.getProfessor().getId();
+        return alunoRepository.findAllByProfessorId(requireCurrentProfessorId());
     }
 
     public Aluno findById(UUID id) {
