@@ -38,7 +38,6 @@ public class AlunoService extends BaseService {
                 .orElseThrow(() -> new ResourceNotFoundException("Aluno não encontrado, ID: " + id));
         ensureProfessorAccess(entity.getProfessorId(), "aluno");
         updateAluno(entity, obj);
-        entity.setProfessorId(requireCurrentProfessorId());
         validarEmailObrigatorioSemResponsavel(entity);
         return alunoRepository.save(entity);
     }
@@ -51,7 +50,6 @@ public class AlunoService extends BaseService {
     }
 
     public void updateAluno(Aluno aluno, Aluno obj) {
-        aluno.setProfessorId(obj.getProfessorId());
         aluno.setResponsavelId(obj.getResponsavelId());
         aluno.setNome(obj.getNome());
         aluno.setEmail(obj.getEmail());

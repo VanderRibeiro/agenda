@@ -19,11 +19,7 @@ public class AulaService extends BaseService {
     }
 
     public List<Aula> findAll() {
-        UUID professorId = getCurrentProfessorId();
-        if (professorId == null) {
-            return List.of();
-        }
-        return aulaRepository.findAllByProfessorId(professorId);
+        return aulaRepository.findAllByProfessorId(requireCurrentProfessorId());
     }
 
     public Aula findById(UUID id) {
@@ -42,7 +38,6 @@ public class AulaService extends BaseService {
                 .orElseThrow(() -> new ResourceNotFoundException("Aula não encontrada, ID: " + id));
         ensureProfessorAccess(entity.getProfessorId(), "aula");
         updateAula(entity, obj);
-        entity.setProfessorId(requireCurrentProfessorId());
         return aulaRepository.save(entity);
     }
 
@@ -54,7 +49,6 @@ public class AulaService extends BaseService {
     }
 
     public void updateAula(Aula aula, Aula obj) {
-        aula.setProfessorId(obj.getProfessorId());
         aula.setAlunoId(obj.getAlunoId());
         aula.setAulaOriginalId(obj.getAulaOriginalId());
         aula.setData(obj.getData());

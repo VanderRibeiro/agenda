@@ -19,11 +19,7 @@ public class ResponsavelService extends BaseService {
     }
 
     public List<Responsavel> findAll() {
-        UUID professorId = getCurrentProfessorId();
-        if (professorId == null) {
-            return List.of();
-        }
-        return responsavelRepository.findAllByProfessorId(professorId);
+        return responsavelRepository.findAllByProfessorId(requireCurrentProfessorId());
     }
 
     public Responsavel findById(UUID id) {
@@ -49,13 +45,11 @@ public class ResponsavelService extends BaseService {
                 .orElseThrow(() -> new ResourceNotFoundException("Responsável não encontrado, ID: " + id));
         ensureProfessorAccess(entity.getProfessorId(), "responsável");
         updateResponsavel(entity, obj);
-        entity.setProfessorId(requireCurrentProfessorId());
         return responsavelRepository.save(entity);
     }
 
     public void updateResponsavel(Responsavel responsavel, Responsavel obj) {
         responsavel.setNome(obj.getNome());
-        responsavel.setProfessorId(obj.getProfessorId());
         responsavel.setTelefone(obj.getTelefone());
     }
 

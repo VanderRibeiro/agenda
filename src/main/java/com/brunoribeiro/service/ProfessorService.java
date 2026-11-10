@@ -22,10 +22,7 @@ public class ProfessorService extends BaseService {
     }
 
     public List<Professor> findAll() {
-        UUID professorId = getCurrentProfessorId();
-        if (professorId == null) {
-            return List.of();
-        }
+        UUID professorId = requireCurrentProfessorId();
         return professorRepository.findById(professorId)
                 .map(List::of)
                 .orElse(List.of());
