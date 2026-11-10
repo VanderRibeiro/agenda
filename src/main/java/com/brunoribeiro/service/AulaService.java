@@ -1,6 +1,7 @@
 package com.brunoribeiro.service;
 
 import com.brunoribeiro.entities.Aula;
+import com.brunoribeiro.entities.enums.StatusAula;
 import com.brunoribeiro.exception.BusinessException;
 import com.brunoribeiro.exception.ResourceNotFoundException;
 import com.brunoribeiro.repositories.AulaRepository;
@@ -65,7 +66,14 @@ public class AulaService extends BaseService {
         if (aula == null) {
             throw new BusinessException("Dados da aula não informados.");
         }
+
         aula.setProfessorId(requireCurrentProfessorId());
+        aula.setStatus(StatusAula.AGENDADA);
+
+        if (aula.getHorarioInicio() != null && aula.getDuracaoMinutos() != null) {
+            aula.setHorarioFim(aula.getHorarioInicio().plusMinutes(aula.getDuracaoMinutos()));
+        }
+
         return aulaRepository.save(aula);
     }
 }
