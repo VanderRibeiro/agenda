@@ -105,19 +105,20 @@ erDiagram
     PROFESSOR ||--o{ ALUNO : teaches
     PROFESSOR ||--o{ AULA : conducts
     RESPONSAVEL ||--o{ ALUNO : supervises
+    PROFESSOR ||--o{ RESPONSAVEL : attends
     ALUNO ||--o{ AULA : attends
 
     PROFESSOR {
         uuid id PK
         string nome
         string email UK
-        string senha_hash
+        string password
         int intervalo_minimo
     }
 
     RESPONSAVEL {
         uuid id PK
-        uuid professor
+        uuid professor_id FK
         string nome
         string telefone
     }
