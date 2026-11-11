@@ -164,4 +164,10 @@ erDiagram
 ```
 ## Status
 
-Setup do projeto 
+<br>Setup do projeto
+<br>CRUD
+<br>Banco de dados
+<br>Exceptions
+<br>Autenticação 
+<br>Token
+<br>Regras de negócio
