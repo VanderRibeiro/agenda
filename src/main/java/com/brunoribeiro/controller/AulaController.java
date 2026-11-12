@@ -56,4 +56,10 @@ public class AulaController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(AulaResponseDTO.fromEntity(aulaService.create(aulaRequestDTO.toEntity())));
     }
+
+    @PostMapping("/{id}/remarcar")
+    public ResponseEntity<AulaResponseDTO> remarcar(@PathVariable UUID id, @RequestBody @Valid AulaRequestDTO aulaRequestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(AulaResponseDTO.fromEntity(aulaService.remarcar(id, aulaRequestDTO.toEntity())));
+    }
 }

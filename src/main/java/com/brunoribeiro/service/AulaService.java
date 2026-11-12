@@ -89,6 +89,30 @@ public class AulaService extends BaseService {
         return aulaRepository.save(aula);
     }
 
+    public Aula remarcar(UUID id, Aula novaAula) {
+        if (novaAula == null) {
+            throw new BusinessException("Dados da aula não informados.");
+        }
+
+        Aula aulaOriginal = findById(id);
+        ensureProfessorAccess(aulaOriginal.getProfessorId(), "aula");
+
+        novaAula.setProfessorId(aulaOriginal.getProfessorId());
+        novaAula.setAlunoId(novaAula.getAlunoId() != null ? novaAula.getAlunoId() : aulaOriginal.getAlunoId());
+        novaAula.setAulaOriginalId(id);
+        novaAula.setStatus(StatusAula.AGENDADA);
+
+        if (novaAula.getHorarioInicio() != null && novaAula.getDuracaoMinutos() != null) {
+            novaAula.setHorarioFim(novaAula.getHorarioInicio().plusMinutes(novaAula.getDuracaoMinutos()));
+        }
+
+        validarConflitoDeHorario(novaAula);
+
+        aulaOriginal.setStatus(StatusAula.ADIADA);
+        aulaRepository.save(aulaOriginal);
+        return aulaRepository.save(novaAula);
+    }
+
     private void validarConflitoDeHorario(Aula aula) {
         if (aula.getData() == null || aula.getHorarioInicio() == null || aula.getDuracaoMinutos() == null) {
             return;

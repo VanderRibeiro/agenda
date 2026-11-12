@@ -15,14 +15,6 @@ import java.util.UUID;
 public interface AulaRepository extends JpaRepository<Aula, UUID> {
     List<Aula> findAllByProfessorId(UUID professorId);
 
-    List<Aula> findAllByProfessorIdAndData(UUID professorId, LocalDate data);
-
-    List<Aula> findAllByProfessorIdAndDataAndStatusNotIn(
-            UUID professorId,
-            LocalDate data,
-            Collection<StatusAula> status
-    );
-
     @Query("select a from Aula a where a.professorId = :professorId " +
             "and a.data = :data " +
             "and a.horarioInicio < :fim " +
