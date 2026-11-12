@@ -105,19 +105,20 @@ erDiagram
     PROFESSOR ||--o{ ALUNO : teaches
     PROFESSOR ||--o{ AULA : conducts
     RESPONSAVEL ||--o{ ALUNO : supervises
+    PROFESSOR ||--o{ RESPONSAVEL : attends
     ALUNO ||--o{ AULA : attends
 
     PROFESSOR {
         uuid id PK
         string nome
         string email UK
-        string senha_hash
+        string password
         int intervalo_minimo
     }
 
     RESPONSAVEL {
         uuid id PK
-        uuid professor
+        uuid professor_id FK
         string nome
         string telefone
     }
@@ -164,4 +165,10 @@ erDiagram
 ```
 ## Status
 
-Setup do projeto 
+<br>Setup do projeto
+<br>CRUD
+<br>Banco de dados
+<br>Exceptions
+<br>Autenticação 
+<br>Token
+<br>Regras de negócio
