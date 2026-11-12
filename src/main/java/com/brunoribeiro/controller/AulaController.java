@@ -3,6 +3,7 @@ package com.brunoribeiro.controller;
 import com.brunoribeiro.dto.request.AulaRequestDTO;
 import com.brunoribeiro.dto.request.AulaStatusRequestDTO;
 import com.brunoribeiro.dto.response.AulaResponseDTO;
+import com.brunoribeiro.dto.response.IndicadoresFinanceirosDTO;
 import com.brunoribeiro.service.AulaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,11 @@ public class AulaController {
     @GetMapping("/{id}")
     public AulaResponseDTO findById(@PathVariable UUID id) {
         return AulaResponseDTO.fromEntity(aulaService.findById(id));
+    }
+
+    @GetMapping("/indicadores")
+    public IndicadoresFinanceirosDTO getIndicadoresFinanceiros() {
+        return aulaService.getIndicadoresFinanceiros();
     }
 
     @DeleteMapping("/{id}")

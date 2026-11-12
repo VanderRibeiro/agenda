@@ -6,8 +6,10 @@ import com.brunoribeiro.exception.BusinessException;
 import com.brunoribeiro.exception.ResourceNotFoundException;
 import com.brunoribeiro.repositories.AulaRepository;
 import com.brunoribeiro.repositories.ProfessorRepository;
+import com.brunoribeiro.dto.response.IndicadoresFinanceirosDTO;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +30,26 @@ public class AulaService extends BaseService {
 
     public List<Aula> findAll() {
         return aulaRepository.findAllByProfessorId(requireCurrentProfessorId());
+    }
+
+    public IndicadoresFinanceirosDTO getIndicadoresFinanceiros() {
+        UUID professorId = requireCurrentProfessorId();
+        List<Aula> aulas = aulaRepository.findAllByProfessorId(professorId);
+
+        return new IndicadoresFinanceirosDTO(
+                somarPorStatus(aulas, StatusAula.REALIZADA),
+                somarPorStatus(aulas, StatusAula.AGENDADA),
+                somarPorStatus(aulas, StatusAula.CANCELADA),
+                somarPorStatus(aulas, StatusAula.ADIADA)
+        );
+    }
+
+    private BigDecimal somarPorStatus(List<Aula> aulas, StatusAula status) {
+        return aulas.stream()
+                .filter(aula -> status.equals(aula.getStatus()))
+                .map(Aula::getValor)
+                .filter(valor -> valor != null)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public Aula findById(UUID id) {
