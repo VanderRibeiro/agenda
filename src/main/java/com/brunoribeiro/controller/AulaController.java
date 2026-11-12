@@ -1,6 +1,7 @@
 package com.brunoribeiro.controller;
 
 import com.brunoribeiro.dto.request.AulaRequestDTO;
+import com.brunoribeiro.dto.request.AulaStatusRequestDTO;
 import com.brunoribeiro.dto.response.AulaResponseDTO;
 import com.brunoribeiro.service.AulaService;
 import jakarta.validation.Valid;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -61,5 +63,10 @@ public class AulaController {
     public ResponseEntity<AulaResponseDTO> remarcar(@PathVariable UUID id, @RequestBody @Valid AulaRequestDTO aulaRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(AulaResponseDTO.fromEntity(aulaService.remarcar(id, aulaRequestDTO.toEntity())));
+    }
+
+    @PatchMapping("/{id}/status")
+    public AulaResponseDTO alterarStatus(@PathVariable UUID id, @RequestBody @Valid AulaStatusRequestDTO request) {
+        return AulaResponseDTO.fromEntity(aulaService.alterarStatus(id, request.status()));
     }
 }

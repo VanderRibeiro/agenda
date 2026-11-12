@@ -50,6 +50,34 @@ public class AulaService extends BaseService {
         return aulaRepository.save(entity);
     }
 
+    public Aula alterarStatus(UUID id, StatusAula novoStatus) {
+        if (novoStatus == null) {
+            throw new BusinessException("Status da aula não informado.");
+        }
+
+        Aula aula = findById(id);
+        StatusAula statusAtual = aula.getStatus();
+
+        if (statusAtual == novoStatus) {
+            return aula;
+        }
+
+        if (!isTransicaoPermitida(statusAtual, novoStatus)) {
+            throw new BusinessException("Transição de status inválida: " + statusAtual + " -> " + novoStatus);
+        }
+
+        aula.setStatus(novoStatus);
+        return aulaRepository.save(aula);
+    }
+
+    private boolean isTransicaoPermitida(StatusAula atual, StatusAula novo) {
+        return switch (atual) {
+            case AGENDADA -> Set.of(StatusAula.REALIZADA, StatusAula.CANCELADA, StatusAula.ADIADA).contains(novo);
+            case ADIADA -> Set.of(StatusAula.AGENDADA, StatusAula.REALIZADA).contains(novo);
+            case REALIZADA, CANCELADA -> false;
+        };
+    }
+
     public void deleteById(UUID id) {
         Aula aula = aulaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Aula não encontrada, ID: " + id));
