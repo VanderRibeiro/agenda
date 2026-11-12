@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -102,25 +101,16 @@ public class AulaService extends BaseService {
 
         LocalTime inicio = aula.getHorarioInicio();
         LocalTime fim = inicio.plusMinutes(aula.getDuracaoMinutos());
+        LocalTime inicioComIntervalo = inicio.minusMinutes(intervalo);
+        LocalTime fimComIntervalo = fim.plusMinutes(intervalo);
 
         boolean conflito = aulaRepository
-                .findAllByProfessorIdAndDataAndStatusNotIn(professorId, aula.getData(), STATUS_IGNORADOS).stream()
-                .filter(existing -> !Objects.equals(existing.getId(), aula.getId()))
-                .anyMatch(existing -> existeConflitoCom(existing, inicio, fim, intervalo));
+                .findOverlappingAulas(professorId, aula.getData(), inicioComIntervalo, fimComIntervalo, STATUS_IGNORADOS)
+                .stream()
+                .anyMatch(existing -> existing.getId() != null && !existing.getId().equals(aula.getId()));
 
         if (conflito) {
             throw new BusinessException("O horário solicitado está próximo demais de outro horário já existente. Escolha outro horário ou acesse Configurações > Horários > Tempo de intervalo.");
         }
-    }
-
-    private boolean existeConflitoCom(Aula existente, LocalTime inicio, LocalTime fim, int intervalo) {
-        if (existente.getHorarioInicio() == null || existente.getDuracaoMinutos() == null) {
-            return false;
-        }
-        LocalTime existenteInicio = existente.getHorarioInicio();
-        LocalTime existenteFim = existenteInicio.plusMinutes(existente.getDuracaoMinutos());
-
-        return inicio.isBefore(existenteFim.plusMinutes(intervalo))
-                && fim.isAfter(existenteInicio.minusMinutes(intervalo));
     }
 }
